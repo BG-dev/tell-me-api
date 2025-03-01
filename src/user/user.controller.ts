@@ -17,7 +17,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 import { User } from './interfaces/user.interface';
 import { ForbiddenException } from 'src/exception/forbidden.exception';
-import { HttpExceptionFilter } from 'src/filter/http-exceprion.filter';
+import { HttpExceptionFilter } from 'src/filter/http-exception.filter';
 
 @Controller('user')
 @UseFilters(new HttpExceptionFilter())
