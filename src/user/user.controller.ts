@@ -9,14 +9,18 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 import { User } from './interfaces/user.interface';
 import { ValidationPipe } from 'src/pipes/validation.pipe';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorator/roles.decorator';
 
 @Controller('user')
+@UseGuards(RolesGuard)
 export class UserController {
   constructor(private userService: UserService) {}
 
@@ -35,6 +39,7 @@ export class UserController {
   }
 
   @Post()
+  @Roles(['admin'])
   create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
