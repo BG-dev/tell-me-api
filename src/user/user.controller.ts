@@ -4,26 +4,22 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
-  UseFilters,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 import { User } from './interfaces/user.interface';
-import { ForbiddenException } from 'src/exception/forbidden.exception';
-import { HttpExceptionFilter } from 'src/filter/http-exception.filter';
+import { ValidationPipe } from 'src/pipes/validation.pipe';
 
 @Controller('user')
-@UseFilters(new HttpExceptionFilter())
 export class UserController {
   constructor(private userService: UserService) {}
- 
+
   @Get()
   findAll(@Query('age') age: number): User[] {
     throw new BadRequestException('Something bad', {
@@ -34,14 +30,13 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): string {
+  findOne(@Param('id', ParseIntPipe) id: string): string {
     return `This endpoint returns a ${id} user`;
   }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    throw new ForbiddenException();
-    // return this.userService.create(createUserDto);
+  create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
   }
 
   @Put(':id')
